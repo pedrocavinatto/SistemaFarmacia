@@ -1,0 +1,11 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=farmacia
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 3306:3306
+    volumes:
+      - ./src/db.sql:/docker-entrypoint-initdb.d/db.sql
