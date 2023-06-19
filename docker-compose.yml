@@ -5,6 +5,7 @@ services:
     environment:
       - MYSQL_DATABASE=farmacia
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_CHARSET=utf8mb4
     ports:
       - 3306:3306
     volumes:

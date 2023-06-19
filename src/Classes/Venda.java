@@ -2,12 +2,13 @@ package Classes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 
 public class Venda {
 	private int id;
 	private Remedio[] remedios;
 	private MetodoPagamento metodo_pagamento;
-	private LocalDate data_venda;
+	private Date data_venda;
 	private BigDecimal valor_total;
 	
 	public int getId() {
@@ -34,11 +35,11 @@ public class Venda {
         this.metodo_pagamento = metodo_pagamento;
     }
 
-    public LocalDate getDataVenda() {
+    public Date getDataVenda() {
         return data_venda;
     }
 
-    public void setDataVenda(LocalDate data_venda) {
+    public void setDataVenda(Date data_venda) {
         this.data_venda = data_venda;
     }
 

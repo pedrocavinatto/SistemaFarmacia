@@ -1,21 +1,24 @@
 package Classes;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Remedio {
 	private int id;
-	private String codigo_barra; //usar UNIQUE no SQL
+	private String codigo_barras;
 	private String nome;
 	private Marca marca;
-	private LocalDate data_producao;
-	private LocalDate data_validade;
+	private Date data_producao;
+	private Date data_validade;
 	private BigDecimal valor_custo;
 	private BigDecimal valor_venda;
 	private int quantidade;
 	
-	public Remedio(int id, String codigo_barra, String nome, Marca marca, LocalDate data_producao, LocalDate data_validade, BigDecimal valor_custo, BigDecimal valor_venda, int quantidade) {
+	public Remedio() {
+	}
+	
+	public Remedio(int id, String codigo_barras, String nome, Marca marca, Date data_producao, Date data_validade, BigDecimal valor_custo, BigDecimal valor_venda, int quantidade) {
 		this.id = id;
-		this.codigo_barra = codigo_barra;
+		this.codigo_barras = codigo_barras;
 		this.nome = nome;
 		this.marca = marca;
 		this.data_producao = data_producao;
@@ -34,11 +37,11 @@ public class Remedio {
     }
 
     public String getCodigoBarra() {
-        return codigo_barra;
+        return codigo_barras;
     }
 
-    public void setCodigoBarra(String codigo_barra) {
-        this.codigo_barra = codigo_barra;
+    public void setCodigoBarra(String codigo_barras) {
+        this.codigo_barras = codigo_barras;
     }
 
     public String getNome() {
@@ -62,19 +65,19 @@ public class Remedio {
         this.marca = marca;
     }
 
-    public LocalDate getDataProducao() {
+    public Date getDataProducao() {
         return data_producao;
     }
 
-    public void setDataProducao(LocalDate data_producao) {
+    public void setDataProducao(Date data_producao) {
         this.data_producao = data_producao;
     }
 
-    public LocalDate getDataValidade() {
+    public Date getDataValidade() {
         return data_validade;
     }
 
-    public void setDataValidade(LocalDate data_validade) {
+    public void setDataValidade(Date data_validade) {
         this.data_validade = data_validade;
     }
 

@@ -6,11 +6,18 @@ public class Marca {
 	private String cnpj;
 	private String telefone;
 	
+	public Marca() {
+	}
+	
 	public Marca(int id, String nome, String cnpj, String telefone) {
         this.id = id;
         this.nome = nome;
         this.cnpj = cnpj;
         this.telefone = telefone;
+    }
+	
+	public String toString() { //alterando método toString para a ComboBox aparecer o nome da marca
+        return nome;
     }
 	
 	public int getId() {
