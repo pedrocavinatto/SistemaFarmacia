@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.swing.JTextField;
 
-import Classes.ConexaoBanco;
-import Classes.Marca;
+import Model.ConexaoBanco;
+import Model.Marca;
 
 public class ControleMarca {
 	

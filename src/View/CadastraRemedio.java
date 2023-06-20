@@ -6,9 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Classes.Marca;
 import Controller.ControleMarca;
 import Controller.ControleRemedio;
+import Model.Marca;
 
 import javax.swing.JButton;
 import java.awt.Font;
@@ -66,6 +66,9 @@ public class CadastraRemedio extends JFrame {
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controle_remedio.incluiRemedio(tfCodigoBarras, tfNome, Marca.class.cast(cbMarca.getSelectedItem()), tfValorCusto, tfValorVenda, tfQuantidade);
+				ListaRemedio lista_remedio = new ListaRemedio();
+				lista_remedio.setVisible(true);
+				setVisible(false);
 			}
 		});
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 18));

@@ -3,9 +3,11 @@ package Controller;
 import java.math.BigDecimal;
 
 import javax.swing.JTextField;
-import Classes.ConexaoBanco;
-import Classes.Marca;
-import Classes.Remedio;
+
+import Model.ConexaoBanco;
+import Model.Marca;
+import Model.Remedio;
+
 import java.util.List;
 
 public class ControleRemedio {
