@@ -27,15 +27,18 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import Controller.ControleMarca;
+import Controller.ControleRemedio;
 import Controller.ControleVenda;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JFormattedTextField;
 
 public class CadastraVenda extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField_1;
 	private JTable tbRemedios;
+	private JFormattedTextField tfDataVenda;
+	private JComboBox cbMetodoPagamento;
 
 	/**
 	 * Launch the application.
@@ -58,6 +61,7 @@ public class CadastraVenda extends JFrame {
 	 */
 	public CadastraVenda() {
 		Map<Integer, Integer> rowId_remedioId = new HashMap<>();
+		ControleVenda controle_venda = new ControleVenda();
 		
 		setTitle("Cadastro de venda");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,17 +75,16 @@ public class CadastraVenda extends JFrame {
 		JButton btnCadastrar = new JButton("Cadastrar");
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//todo
+				
+				controle_venda.incluiVenda(cbMetodoPagamento, tfDataVenda, tbRemedios);
+				ListaVenda lista_venda = new ListaVenda();
+				lista_venda.setVisible(true);
+				setVisible(false);
 			}
 		});
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnCadastrar.setBounds(207, 392, 196, 42);
 		contentPane.add(btnCadastrar);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(217, 83, 299, 23);
-		contentPane.add(textField_1);
 		
 		JLabel lblDataDeVenda = new JLabel("Data de venda:");
 		lblDataDeVenda.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -96,13 +99,13 @@ public class CadastraVenda extends JFrame {
 		JLabel lblRemdios = new JLabel("Remédios");
 		lblRemdios.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRemdios.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblRemdios.setBounds(63, 127, 453, 28);
+		lblRemdios.setBounds(10, 127, 602, 28);
 		contentPane.add(lblRemdios);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(MetodoPagamento.values()));
-		comboBox.setBounds(217, 46, 299, 21);
-		contentPane.add(comboBox);
+		cbMetodoPagamento = new JComboBox();
+		cbMetodoPagamento.setModel(new DefaultComboBoxModel(MetodoPagamento.values()));
+		cbMetodoPagamento.setBounds(217, 46, 299, 21);
+		contentPane.add(cbMetodoPagamento);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 165, 602, 217);
@@ -125,21 +128,23 @@ public class CadastraVenda extends JFrame {
 		});
 		scrollPane.setViewportView(tbRemedios);
 		atualizaLista(tbRemedios, rowId_remedioId);
+		
+		tfDataVenda = new JFormattedTextField();
+		tfDataVenda.setBounds(217, 85, 299, 19);
+		contentPane.add(tfDataVenda);
 	}
 	
 	private void atualizaLista(JTable tbRemedios, Map<Integer, Integer> rowId_remedioId) {
-		ControleVenda controle_venda = new ControleVenda();
-		List<Venda> vendas = controle_venda.listaVendas();
+		ControleRemedio controle_remedio = new ControleRemedio();
+		List<Remedio> remedios = controle_remedio.listaRemedios();
 		
 		int i = -1; //contador do ID linha
-		for (Venda venda : vendas) {
-			for (Remedio remedio : venda.getRemedios()) {
-				i++;
-				DefaultTableModel model = (DefaultTableModel) tbRemedios.getModel();
-				Object[] newRow = {0, remedio.getNome(), remedio.getMarca().getNome(), remedio.getCodigoBarra(), remedio.getValorVenda(), remedio.getQuantidade()};
-				model.addRow(newRow);
-				rowId_remedioId.put(i, remedio.getId());
-			}
+		for (Remedio remedio : remedios) {
+			i++;
+			DefaultTableModel model = (DefaultTableModel) tbRemedios.getModel();
+			Object[] newRow = {0, remedio.getNome(), remedio.getMarca().getNome(), remedio.getCodigoBarra(), remedio.getValorVenda(), remedio.getQuantidade()};
+			model.addRow(newRow);
+			rowId_remedioId.put(i, remedio.getId());
 		}
 	}
 }

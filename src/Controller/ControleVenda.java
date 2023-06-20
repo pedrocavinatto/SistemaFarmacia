@@ -2,10 +2,11 @@ package Controller;
 
 import java.util.List;
 
+import javax.swing.JComboBox;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import Model.ConexaoBanco;
-import Model.Marca;
 import Model.Venda;
 
 public class ControleVenda {
@@ -19,7 +20,7 @@ public class ControleVenda {
 			System.out.println("Erro de conexão com o banco de Dados!!");
 		}
 	}
-	public void incluiVenda(JTextField tfCodigoBarra, JTextField tfNome, Marca marca, JTextField tfValorCusto, JTextField tfValorVenda, JTextField tfQuantidade) {
+	public void incluiVenda(JComboBox cbMetodoPagamento, JTextField tfDataVenda, JTable tbRemedios) {
 		Venda venda = new Venda();
 		//todo
 		bd.inserirVenda(venda);

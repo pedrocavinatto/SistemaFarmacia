@@ -84,6 +84,9 @@ public class ListaMarca extends JFrame {
 			Class[] columnTypes = new Class[] {
 				String.class, String.class, String.class
 			};
+			boolean[] columnEditables = new boolean[] {
+				false, false, false
+			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}

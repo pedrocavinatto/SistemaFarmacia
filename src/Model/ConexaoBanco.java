@@ -40,14 +40,14 @@ public class ConexaoBanco {
 			psInsert.setString(1, remedio.getCodigoBarra());
 			psInsert.setString(2, remedio.getNome());
 			psInsert.setInt(3, remedio.getMarca().getId());
-			psInsert.setString(4, remedio.getDataProducao().toString());
-			psInsert.setString(5, remedio.getDataValidade().toString());
+			psInsert.setDate(4, new java.sql.Date(remedio.getDataProducao().getTime()));
+			psInsert.setDate(5, new java.sql.Date(remedio.getDataValidade().getTime()));
 			psInsert.setBigDecimal(6, remedio.getValorCusto());
 			psInsert.setBigDecimal(7, remedio.getValorVenda());
 			psInsert.setInt(8, remedio.getQuantidade());
 			psInsert.executeUpdate();
 		}catch (Exception e) {
-			throw new RuntimeException("Ocorreu um erro na inserção do remédio");
+			throw new RuntimeException("Ocorreu um erro na inserção do remédio: " + e.getMessage());
 		}finally {
 			this.liberar(psInsert);
 		}
@@ -57,14 +57,16 @@ public class ConexaoBanco {
 		PreparedStatement psSelect = null;
 		try {
 			psSelect = conexao.prepareStatement("SELECT * "
-					+ "FROM remedios "
-					+ "Order by id");
+					+ "FROM remedios r "
+					+ "LEFT JOIN marcas m "
+					+ "ON r.id_marca=m.id "
+					+ "Order by r.id");
 			ResultSet rs = psSelect.executeQuery();
 			while (rs.next()) {
-				remedios.add(new Remedio(rs.getInt("id"),
+				remedios.add(new Remedio(rs.getInt("r.id"),
 										 rs.getString("codigo_barras"),
-										 rs.getString("nome"),
-										 new Marca(rs.getInt("id_marca"), null, null, null),
+										 rs.getString("r.nome"),
+										 new Marca(rs.getInt("id_marca"), rs.getString("m.nome"), rs.getString("cnpj"), rs.getString("telefone")),
 										 rs.getDate("data_producao"),
 										 rs.getDate("data_validade"),
 										 rs.getBigDecimal("valor_custo"),

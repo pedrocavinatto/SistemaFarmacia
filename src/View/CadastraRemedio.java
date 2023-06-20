@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
 import Controller.ControleMarca;
 import Controller.ControleRemedio;
@@ -17,8 +18,10 @@ import javax.swing.JLabel;
 import javax.swing.JFormattedTextField;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.*;
 
 public class CadastraRemedio extends JFrame {
 
@@ -29,6 +32,8 @@ public class CadastraRemedio extends JFrame {
 	private JTextField tfNome;
 	private JTextField tfCodigoBarras;
 	private JComboBox cbMarca;
+	private JFormattedTextField tfDataVencimento;
+	private JFormattedTextField tfDataProducao;
 
 	/**
 	 * Launch the application.
@@ -65,7 +70,7 @@ public class CadastraRemedio extends JFrame {
 		JButton btnCadastrar = new JButton("Cadastrar");
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				controle_remedio.incluiRemedio(tfCodigoBarras, tfNome, Marca.class.cast(cbMarca.getSelectedItem()), tfValorCusto, tfValorVenda, tfQuantidade);
+				controle_remedio.incluiRemedio(tfCodigoBarras, tfNome, Marca.class.cast(cbMarca.getSelectedItem()), tfDataProducao, tfDataVencimento, tfValorCusto, tfValorVenda, tfQuantidade);
 				ListaRemedio lista_remedio = new ListaRemedio();
 				lista_remedio.setVisible(true);
 				setVisible(false);
@@ -105,18 +110,31 @@ public class CadastraRemedio extends JFrame {
 		lblNewLabel_4_1.setBounds(93, 232, 130, 28);
 		contentPane.add(lblNewLabel_4_1);
 		
-		JFormattedTextField tfDataVencimento = new JFormattedTextField();
-		tfDataVencimento.setBounds(243, 199, 299, 23);
-		contentPane.add(tfDataVencimento);
+		try {
+			MaskFormatter formatter = new MaskFormatter("##/##/####");
+			tfDataVencimento = new JFormattedTextField(formatter);
+			tfDataVencimento.setBounds(243, 199, 299, 23);
+			contentPane.add(tfDataVencimento);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		
 		JLabel lblNewLabel_4 = new JLabel("Data de vencimento:");
 		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel_4.setBounds(93, 194, 130, 28);
 		contentPane.add(lblNewLabel_4);
 		
-		JFormattedTextField tfDataProducao = new JFormattedTextField();
-		tfDataProducao.setBounds(243, 161, 299, 23);
-		contentPane.add(tfDataProducao);
+		try {
+			MaskFormatter formatter = new MaskFormatter("##/##/####");
+			tfDataProducao = new JFormattedTextField(formatter);
+			tfDataProducao.setBounds(243, 161, 299, 23);
+			contentPane.add(tfDataProducao);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		JLabel lblDataDeProduo = new JLabel("Data de produção:");
 		lblDataDeProduo.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -127,7 +145,7 @@ public class CadastraRemedio extends JFrame {
 		List<Marca> marcasArray = controle_marca.listaMarcas();
 		Marca[] marcas = marcasArray.toArray(new Marca[0]);
 		cbMarca = new JComboBox(marcas);
-		cbMarca.setBounds(243, 119, 299, 21);
+		cbMarca.setBounds(243, 121, 299, 27);
 		contentPane.add(cbMarca);
 		
 		JLabel lblMarca = new JLabel("Marca:");
