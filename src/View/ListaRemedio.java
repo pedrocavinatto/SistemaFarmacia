@@ -15,6 +15,8 @@ import Controller.ControleRemedio;
 import Model.Remedio;
 
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class ListaRemedio extends JFrame {
 
 	private JPanel contentPane;
 	private JTable tbRemedios;
-	private JButton btnEditaMarca;
+	private JButton btnEditaRemedio;
 
 	/**
 	 * Launch the application.
@@ -48,16 +50,26 @@ public class ListaRemedio extends JFrame {
 	public ListaRemedio() {
 
 		Map<Integer, Integer> rowId_remedioId = new HashMap<>();
-		
+
 		setTitle("Remédios");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 806, 511);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		setBounds(100, 100, 649, 508);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
+		Menu menu = new Menu();
+		menu.setVisible(false);
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				menu.setVisible(true);
+			}
+		});
+
 		JButton btnCadastraRemedio = new JButton("Cadastrar remédio");
 		btnCadastraRemedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -69,62 +81,69 @@ public class ListaRemedio extends JFrame {
 		btnCadastraRemedio.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnCadastraRemedio.setBounds(10, 419, 196, 42);
 		contentPane.add(btnCadastraRemedio);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 10, 772, 400);
 		contentPane.add(scrollPane);
-		
+
 		tbRemedios = new JTable();
 		tbRemedios.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Nome", "Marca", "C\u00F3digo de barras", "Data de produ\u00E7\u00E3o", "Validade", "Valor de custo", "Valor de venda", "Quantidade"
-			}
-		) {
+				new Object[][] {
+				},
+				new String[] {
+						"Nome", "Marca", "C\u00F3digo de barras", "Data de produ\u00E7\u00E3o", "Validade",
+						"Valor de custo", "Valor de venda", "Quantidade"
+				}) {
 			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class, String.class, String.class, Double.class, Double.class, Integer.class
+					String.class, String.class, String.class, String.class, String.class, Double.class, Double.class,
+					Integer.class
 			};
+
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false, false, false, false
+					false, false, false, false, false, false, false, false
 			};
+
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
 		});
 		scrollPane.setViewportView(tbRemedios);
 		atualizaLista(tbRemedios, rowId_remedioId);
-		
-		btnEditaMarca = new JButton("Editar marca");
-		btnEditaMarca.addActionListener(new ActionListener() {
+
+		btnEditaRemedio = new JButton("Editar Remédios");
+		btnEditaRemedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CadastraRemedio cadastra_remedio = new CadastraRemedio(retornaIdRemedioSelecionado(tbRemedios, rowId_remedioId));
+				CadastraRemedio cadastra_remedio = new CadastraRemedio(
+						retornaIdRemedioSelecionado(tbRemedios, rowId_remedioId));
 				cadastra_remedio.setVisible(true);
 				setVisible(false);
 			}
 		});
-		btnEditaMarca.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnEditaMarca.setBounds(326, 419, 187, 42);
-		contentPane.add(btnEditaMarca);
+		btnEditaRemedio.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnEditaRemedio.setBounds(326, 419, 187, 42);
+		contentPane.add(btnEditaRemedio);
 	}
+
 	private void atualizaLista(JTable tbRemedios, Map<Integer, Integer> rowId_remedioId) {
 		ControleRemedio controle_remedio = new ControleRemedio();
 		List<Remedio> remedios = controle_remedio.listaRemedios();
-		
-		int i = -1; //contador do ID linha
+
+		int i = -1; // contador do ID linha
 		for (Remedio remedio : remedios) {
 			i++;
 			DefaultTableModel model = (DefaultTableModel) tbRemedios.getModel();
-			Object[] newRow = {remedio.getNome(), remedio.getMarca().getNome(), remedio.getCodigoBarra(), 
-					remedio.getDataProducao().toString(), remedio.getDataValidade().toString(), 
-					remedio.getValorCusto(), remedio.getValorVenda(), remedio.getQuantidade()};
+			Object[] newRow = { remedio.getNome(), remedio.getMarca().getNome(), remedio.getCodigoBarra(),
+					remedio.getDataProducao().toString(), remedio.getDataValidade().toString(),
+					remedio.getValorCusto(), remedio.getValorVenda(), remedio.getQuantidade() };
 			model.addRow(newRow);
 			rowId_remedioId.put(i, remedio.getId());
 		}
 	}
+
 	private int retornaIdRemedioSelecionado(JTable tbRemedios, Map<Integer, Integer> rowId_remedioId) {
 		int rowIndex = tbRemedios.getSelectedRow();
 		return rowId_remedioId.get(rowIndex);
