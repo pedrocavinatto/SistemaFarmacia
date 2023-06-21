@@ -54,10 +54,11 @@ public class ListaRemedio extends JFrame {
 		setTitle("Remédios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(100, 100, 649, 508);
+		setBounds(100, 100, 800, 508);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setResizable(false);
 		contentPane.setLayout(null);
 
 		Menu menu = new Menu();

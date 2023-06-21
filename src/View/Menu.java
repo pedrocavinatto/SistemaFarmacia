@@ -36,13 +36,14 @@ public class Menu extends JFrame {
 	public Menu() {
 		setTitle("Sistema de farmácia");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 653, 522);
+		setBounds(100, 100, 600, 522);
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		JButton btnRemedio = new JButton("Remédios");
 		btnRemedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -52,9 +53,9 @@ public class Menu extends JFrame {
 			}
 		});
 		btnRemedio.setFont(new Font("Tahoma", Font.PLAIN, 23));
-		btnRemedio.setBounds(211, 123, 193, 50);
+		btnRemedio.setBounds(211, 216, 193, 50);
 		contentPane.add(btnRemedio);
-		
+
 		JButton btnVenda = new JButton("Vendas");
 		btnVenda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -64,9 +65,9 @@ public class Menu extends JFrame {
 			}
 		});
 		btnVenda.setFont(new Font("Tahoma", Font.PLAIN, 23));
-		btnVenda.setBounds(211, 216, 193, 50);
+		btnVenda.setBounds(211, 309, 193, 50);
 		contentPane.add(btnVenda);
-		
+
 		JButton btnMarca = new JButton("Marcas");
 		btnMarca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -76,7 +77,7 @@ public class Menu extends JFrame {
 			}
 		});
 		btnMarca.setFont(new Font("Tahoma", Font.PLAIN, 23));
-		btnMarca.setBounds(211, 309, 193, 50);
+		btnMarca.setBounds(211, 123, 193, 50);
 		contentPane.add(btnMarca);
 	}
 

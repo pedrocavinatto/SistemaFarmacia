@@ -56,6 +56,7 @@ public class ListaMarca extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setResizable(false);
 		contentPane.setLayout(null);
 
 		// Create an instance of the Menu, but keep it invisible for now
