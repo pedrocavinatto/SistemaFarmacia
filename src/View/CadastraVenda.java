@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -28,6 +29,7 @@ import Controller.ControleRemedio;
 import Controller.ControleVenda;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import javax.swing.JFormattedTextField;
 
@@ -130,6 +132,9 @@ public class CadastraVenda extends JFrame {
 			MaskFormatter formatter = new MaskFormatter("##/##/####");
 			tfDataVenda = new JFormattedTextField(formatter);
 			tfDataVenda.setBounds(217, 85, 299, 19);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String formattedDate = dateFormat.format(new Date());
+			tfDataVenda.setText(formattedDate);
 			contentPane.add(tfDataVenda);
 		} catch (ParseException e1) {
 			e1.printStackTrace();
