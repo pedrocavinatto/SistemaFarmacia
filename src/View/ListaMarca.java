@@ -88,6 +88,21 @@ public class ListaMarca extends JFrame {
 		scrollPane.setBounds(10, 10, 600, 405);
 		contentPane.add(scrollPane);
 
+		JButton btnExcluiMarca = new JButton("Excluir marca");
+		btnExcluiMarca.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ControleMarca controle_marca = new ControleMarca();
+				controle_marca.excluiMarca(retornaIdMarcaSelecionada(tbMarcas, rowId_marcaId));
+				DefaultTableModel model = (DefaultTableModel) tbMarcas.getModel();
+				model.setRowCount(0);
+				atualizaLista(tbMarcas, rowId_marcaId);
+			}
+		});
+
+		btnExcluiMarca.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnExcluiMarca.setBounds(443, 425, 167, 52);
+		contentPane.add(btnExcluiMarca);
+
 		tbMarcas = new JTable();
 		scrollPane.setViewportView(tbMarcas);
 		tbMarcas.setModel(new DefaultTableModel(

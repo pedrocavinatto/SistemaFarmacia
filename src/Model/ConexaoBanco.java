@@ -189,6 +189,20 @@ public class ConexaoBanco {
 		}
 	}
 
+	public void deleteMarcas(int id) {
+		PreparedStatement psInsert = null;
+		try {
+			psInsert = conexao.prepareStatement("DELETE FROM marcas "
+					+ "WHERE id = ? ");
+			psInsert.setInt(1, id);
+			psInsert.executeUpdate();
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro em deletar marcas de uma venda: " + e.getMessage());
+		} finally {
+			this.liberar(psInsert);
+		}
+	}
+
 	public List<Marca> listarMarcas() {
 		List<Marca> marcas = new ArrayList<Marca>();
 		PreparedStatement psSelect = null;
