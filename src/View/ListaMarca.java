@@ -52,7 +52,7 @@ public class ListaMarca extends JFrame {
 		setTitle("Marcas");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(100, 100, 649, 508);
+		setBounds(100, 100, 632, 522);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
