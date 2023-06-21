@@ -11,9 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import Controller.ControleMarca;
 import Controller.ControleRemedio;
-import Model.Marca;
 import Model.Remedio;
 
 import java.awt.event.ActionListener;
@@ -26,6 +24,7 @@ public class ListaRemedio extends JFrame {
 
 	private JPanel contentPane;
 	private JTable tbRemedios;
+	private JButton btnEditaMarca;
 
 	/**
 	 * Launch the application.
@@ -47,6 +46,7 @@ public class ListaRemedio extends JFrame {
 	 * Create the frame.
 	 */
 	public ListaRemedio() {
+
 		Map<Integer, Integer> rowId_remedioId = new HashMap<>();
 		
 		setTitle("Remédios");
@@ -97,6 +97,18 @@ public class ListaRemedio extends JFrame {
 		});
 		scrollPane.setViewportView(tbRemedios);
 		atualizaLista(tbRemedios, rowId_remedioId);
+		
+		btnEditaMarca = new JButton("Editar marca");
+		btnEditaMarca.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CadastraRemedio cadastra_remedio = new CadastraRemedio(retornaIdRemedioSelecionado(tbRemedios, rowId_remedioId));
+				cadastra_remedio.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnEditaMarca.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnEditaMarca.setBounds(326, 419, 187, 42);
+		contentPane.add(btnEditaMarca);
 	}
 	private void atualizaLista(JTable tbRemedios, Map<Integer, Integer> rowId_remedioId) {
 		ControleRemedio controle_remedio = new ControleRemedio();
@@ -112,5 +124,9 @@ public class ListaRemedio extends JFrame {
 			model.addRow(newRow);
 			rowId_remedioId.put(i, remedio.getId());
 		}
+	}
+	private int retornaIdRemedioSelecionado(JTable tbRemedios, Map<Integer, Integer> rowId_remedioId) {
+		int rowIndex = tbRemedios.getSelectedRow();
+		return rowId_remedioId.get(rowIndex);
 	}
 }

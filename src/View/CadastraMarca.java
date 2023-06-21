@@ -7,12 +7,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Controller.ControleMarca;
+import Model.Marca;
 
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Optional;
 import java.awt.event.ActionEvent;
 
 public class CadastraMarca extends JFrame {
@@ -21,6 +23,7 @@ public class CadastraMarca extends JFrame {
 	private JTextField tfNome;
 	private JTextField tfCnpj;
 	private JTextField tfTelefone;
+	private JButton btnCadastrar;
 
 	/**
 	 * Launch the application.
@@ -42,9 +45,46 @@ public class CadastraMarca extends JFrame {
 	 * Create the frame.
 	 */
 	public CadastraMarca() {
+		carregaTela("Cadastro de marca", "Cadastrar");
+		
+		//Personalizando o botão de cadastro
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ControleMarca controle_marca = new ControleMarca();	
+				controle_marca.incluiMarca(tfNome, tfCnpj, tfTelefone);
+				ListaMarca lista_marca = new ListaMarca();
+				lista_marca.setVisible(true);
+				setVisible(false);
+			}
+		});
+		contentPane.add(btnCadastrar);
+	}
+	
+	public CadastraMarca(int id) {
+		carregaTela("Edição de marca", "Editar");
+		
 		ControleMarca controle_marca = new ControleMarca();	
 		
-		setTitle("Cadastro de marca");
+		//Personalizando o botão de edição
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controle_marca.editaMarca(id, tfNome, tfCnpj, tfTelefone);
+				ListaMarca lista_marca = new ListaMarca();
+				lista_marca.setVisible(true);
+				setVisible(false);
+			}
+		});
+		contentPane.add(btnCadastrar);
+		
+		//Escrevendo valores antigos da marca para edição
+		Marca marca = controle_marca.pegaMarcaPorId(id);
+		tfNome.setText(marca.getNome());
+		tfCnpj.setText(marca.getCnpj());
+		tfTelefone.setText(marca.getTelefone());
+	}
+	
+	private void carregaTela(String titulo, String tituloBotao) {		
+		setTitle(titulo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 635, 499);
 		contentPane = new JPanel();
@@ -83,17 +123,8 @@ public class CadastraMarca extends JFrame {
 		tfTelefone.setBounds(218, 219, 299, 23);
 		contentPane.add(tfTelefone);
 		
-		JButton btnCadastrar = new JButton("Cadastrar");
-		btnCadastrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				controle_marca.incluiMarca(tfNome, tfCnpj, tfTelefone);
-				ListaMarca lista_marca = new ListaMarca();
-				lista_marca.setVisible(true);
-				setVisible(false);
-			}
-		});
+		btnCadastrar = new JButton(tituloBotao);
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnCadastrar.setBounds(211, 354, 196, 42);
-		contentPane.add(btnCadastrar);
 	}
 }

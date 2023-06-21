@@ -25,8 +25,18 @@ public class ControleMarca {
 		marca.setTelefone(tfTelefone.getText());
 		bd.inserirMarca(marca);
 	}
+	public void editaMarca(int id, JTextField tfNome, JTextField tfCnpj, JTextField tfTelefone) {
+		Marca marca = new Marca();
+		marca.setId(id);
+		marca.setNome(tfNome.getText());
+		marca.setCnpj(tfCnpj.getText());
+		marca.setTelefone(tfTelefone.getText());
+		bd.editarMarca(marca);
+	}
 	public List<Marca> listaMarcas(){
 		return bd.listarMarcas();
 	}
-	
+	public Marca pegaMarcaPorId(int id) {
+		return bd.pegaMarcaPorId(id);
+	}
 }

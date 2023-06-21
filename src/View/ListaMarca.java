@@ -48,7 +48,7 @@ public class ListaMarca extends JFrame {
 		Map<Integer, Integer> rowId_marcaId = new HashMap<>();
 		
 		setTitle("Marcas");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 634, 524);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,6 +95,18 @@ public class ListaMarca extends JFrame {
 		tbMarcas.getColumnModel().getColumn(1).setPreferredWidth(100);
 		tbMarcas.getColumnModel().getColumn(2).setPreferredWidth(100);
 		atualizaLista(tbMarcas, rowId_marcaId);
+		
+		JButton btnEditaMarca = new JButton("Editar marca");
+		btnEditaMarca.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CadastraMarca cadastra_marca = new CadastraMarca(retornaIdMarcaSelecionada(tbMarcas, rowId_marcaId));
+				cadastra_marca.setVisible(true);
+				setVisible(false);
+			}
+		});
+		btnEditaMarca.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnEditaMarca.setBounds(226, 425, 187, 52);
+		contentPane.add(btnEditaMarca);
 	}
 	
 	private void atualizaLista(JTable tbMarcas, Map<Integer, Integer> rowId_marcaId) {
@@ -109,5 +121,9 @@ public class ListaMarca extends JFrame {
 			model.addRow(newRow);
 			rowId_marcaId.put(i, marca.getId());
 		}
+	}
+	private int retornaIdMarcaSelecionada(JTable tbMarcas, Map<Integer, Integer> rowId_marcaId) {
+		int rowIndex = tbMarcas.getSelectedRow();
+		return rowId_marcaId.get(rowIndex);
 	}
 }

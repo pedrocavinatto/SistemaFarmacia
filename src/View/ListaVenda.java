@@ -60,7 +60,9 @@ public class ListaVenda extends JFrame {
 		JButton btnCadastraVenda = new JButton("Cadastrar venda");
 		btnCadastraVenda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				CadastraVenda cadastra_venda = new CadastraVenda();
+				cadastra_venda.setVisible(true);
+				setVisible(false);
 			}
 		});
 		btnCadastraVenda.setFont(new Font("Tahoma", Font.PLAIN, 18));

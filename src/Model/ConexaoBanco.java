@@ -52,6 +52,28 @@ public class ConexaoBanco {
 			this.liberar(psInsert);
 		}
 	}
+	public void editarRemedio(Remedio remedio) {
+		PreparedStatement psInsert = null;
+		try {
+			psInsert = conexao.prepareStatement("UPDATE remedios "
+			+ "SET codigo_barras = ?, nome = ?, id_marca = ?, data_producao= ?, data_validade = ?, valor_custo = ?, valor_venda = ?, quantidade = ? "
+			+ "WHERE id = ? ");
+			psInsert.setString(1, remedio.getCodigoBarra());
+			psInsert.setString(2, remedio.getNome());
+			psInsert.setInt(3, remedio.getMarca().getId());
+			psInsert.setDate(4, new java.sql.Date(remedio.getDataProducao().getTime()));
+			psInsert.setDate(5, new java.sql.Date(remedio.getDataValidade().getTime()));
+			psInsert.setBigDecimal(6, remedio.getValorCusto());
+			psInsert.setBigDecimal(7, remedio.getValorVenda());
+			psInsert.setInt(8, remedio.getQuantidade());
+			psInsert.setInt(9, remedio.getId());
+			psInsert.executeUpdate();
+		}catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro na edição do remédio: " + e.getMessage());
+		}finally {
+			this.liberar(psInsert);
+		}
+	}
 	public List<Remedio> listarRemedios(){
 		List<Remedio> remedios = new ArrayList<Remedio>();
 		PreparedStatement psSelect = null;
@@ -76,11 +98,40 @@ public class ConexaoBanco {
 				);
 			}
 		}catch (Exception e) {
-			throw new RuntimeException("Ocorreu um erro na listagem dos remédios");
+			throw new RuntimeException("Ocorreu um erro na listagem dos remédios: " + e.getMessage());
 		}finally {
 			this.liberar(psSelect);
 		}
 		return remedios;
+	}
+	public Remedio pegaRemedioPorId(int id) {
+		Remedio remedio = new Remedio();
+		remedio.setId(id);
+		PreparedStatement psSelect = null;
+		try {
+			psSelect = conexao.prepareStatement("SELECT * "
+					+ "FROM remedios r "
+					+ "LEFT JOIN marcas m "
+					+ "ON r.id_marca=m.id "
+					+ "WHERE r.id = ? ");
+			psSelect.setInt(1, remedio.getId());
+			ResultSet rs = psSelect.executeQuery();
+			while (rs.next()) {
+				remedio.setNome(rs.getString("r.nome"));
+				remedio.setCodigoBarra(rs.getString("codigo_barras"));
+				remedio.setMarca(new Marca(rs.getInt("id_marca"), rs.getString("m.nome"), rs.getString("cnpj"), rs.getString("telefone")));
+				remedio.setDataProducao(rs.getDate("data_producao"));
+				remedio.setDataValidade(rs.getDate("data_validade"));
+				remedio.setValorCusto(rs.getBigDecimal("valor_custo"));
+				remedio.setValorVenda(rs.getBigDecimal("valor_venda"));
+				remedio.setQuantidade(rs.getInt("quantidade"));
+			}
+		}catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro para pegar o remédio por ID: " + e.getMessage());
+		}finally {
+			this.liberar(psSelect);
+		}
+		return remedio;
 	}
 	public void inserirMarca(Marca marca) {
 		PreparedStatement psInsert = null;
@@ -93,7 +144,24 @@ public class ConexaoBanco {
 			psInsert.setString(3, marca.getTelefone());
 			psInsert.executeUpdate();
 		}catch (Exception e) {
-			throw new RuntimeException("Ocorreu um erro na inserção da marca");
+			throw new RuntimeException("Ocorreu um erro na inserção da marca: " + e.getMessage());
+		}finally {
+			this.liberar(psInsert);
+		}
+	}
+	public void editarMarca(Marca marca) {
+		PreparedStatement psInsert = null;
+		try {
+			psInsert = conexao.prepareStatement("UPDATE marcas "
+			+ "SET nome = ?, cnpj = ?, telefone = ? "
+			+ "WHERE id = ? ");
+			psInsert.setString(1, marca.getNome());
+			psInsert.setString(2, marca.getCnpj());
+			psInsert.setString(3, marca.getTelefone());
+			psInsert.setInt(4, marca.getId());
+			psInsert.executeUpdate();
+		}catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro na edição da marca: " + e.getMessage());
 		}finally {
 			this.liberar(psInsert);
 		}
@@ -115,29 +183,52 @@ public class ConexaoBanco {
 				);
 			}
 		}catch (Exception e) {
-			throw new RuntimeException("Ocorreu um erro na listagem das marcas");
+			throw new RuntimeException("Ocorreu um erro na listagem das marcas: " + e.getMessage());
 		}finally {
 			this.liberar(psSelect);
 		}
 		return marcas;
+	}
+	public Marca pegaMarcaPorId(int id) {
+		Marca marca = new Marca();
+		marca.setId(id);
+		PreparedStatement psSelect = null;
+		try {
+			psSelect = conexao.prepareStatement("SELECT * "
+					+ "FROM marcas "
+					+ "WHERE id = ? ");
+			psSelect.setInt(1, marca.getId());
+			ResultSet rs = psSelect.executeQuery();
+			while (rs.next()) {
+				marca.setNome(rs.getString("nome"));
+				marca.setCnpj(rs.getString("cnpj"));
+				marca.setTelefone(rs.getString("telefone"));
+			}
+		}catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro para pegar a marca por ID: " + e.getMessage());
+		}finally {
+			this.liberar(psSelect);
+		}
+		return marca;
 	}
 	public void inserirVenda(Venda venda) {
 		PreparedStatement psInsert = null;
 		try {
 			psInsert = conexao.prepareStatement("INSERT INTO vendas "
 			+ "(id_metodo_pagamento, data_venda, valor_total) "
-			+ "VALUES (?,?,?,?) "
-			+ "RETURNING id");
+			+ "VALUES (?,?,?) ", Statement.RETURN_GENERATED_KEYS);
 			psInsert.setInt(1, venda.getMetodoPagamento().getId());
 			psInsert.setDate(2, new java.sql.Date(venda.getDataVenda().getTime()));
 			psInsert.setBigDecimal(3, venda.getValorTotal());
-			ResultSet rs = psInsert.executeQuery();
+			psInsert.executeUpdate();
+			ResultSet rs = psInsert.getGeneratedKeys();
 			int generatedId = -1;
 	        if (rs.next()) {
-	            generatedId = rs.getInt("id");
+	            generatedId = rs.getInt(1);
 	        }
 	        if (generatedId > -1) {
 	        	for (Remedio remedio : venda.getRemedios()) {
+	        		if (remedio == null) {continue;};
 	        		psInsert = null;
 	        		psInsert = conexao.prepareStatement("INSERT INTO venda_remedios "
         			+ "(id_venda, id_remedio, valor_venda, quantidade) "
@@ -150,7 +241,50 @@ public class ConexaoBanco {
 	        	}
 	        }
 		}catch (Exception e) {
-			throw new RuntimeException("Ocorreu um erro na inserção da marca");
+			throw new RuntimeException("Ocorreu um erro na inserção da venda: " + e.getMessage());
+		}finally {
+			this.liberar(psInsert);
+		}
+	}
+	public void editarVenda(Venda venda) {
+		PreparedStatement psInsert = null;
+		try {
+			psInsert = conexao.prepareStatement("UPDATE vendas "
+			+ "SET id_metodo_pagamento = ?, data_venda = ?, valor_total = ? "
+			+ "WHERE id = ? ");
+			psInsert.setInt(1, venda.getMetodoPagamento().getId());
+			psInsert.setDate(2, new java.sql.Date(venda.getDataVenda().getTime()));
+			psInsert.setBigDecimal(3, venda.getValorTotal());
+			psInsert.setInt(4, venda.getId());
+			psInsert.executeUpdate();
+			deleteVendaRemedios(venda.getId());
+        	for (Remedio remedio : venda.getRemedios()) {
+        		if (remedio == null) {continue;};
+        		psInsert = null;
+        		psInsert = conexao.prepareStatement("INSERT INTO venda_remedios "
+    			+ "(id_venda, id_remedio, valor_venda, quantidade) "
+    			+ "VALUES (?,?,?,?) ");
+    			psInsert.setInt(1, venda.getId());
+    			psInsert.setInt(2, remedio.getId());
+    			psInsert.setBigDecimal(3, remedio.getValorVenda()); //valor unitario do remedio
+    			psInsert.setInt(4, remedio.getQuantidade());
+    			psInsert.executeUpdate();
+        	}
+		}catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro na inserção da venda: " + e.getMessage());
+		}finally {
+			this.liberar(psInsert);
+		}
+	}
+	public void deleteVendaRemedios(int id_venda) {
+		PreparedStatement psInsert = null;
+		try {
+			psInsert = conexao.prepareStatement("DELETE FROM venda_remedios "
+			+ "WHERE id_venda = ? ");
+			psInsert.setInt(1, id_venda);
+			psInsert.executeUpdate();
+		}catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro em deletar remédios de uma venda: " + e.getMessage());
 		}finally {
 			this.liberar(psInsert);
 		}
@@ -168,7 +302,6 @@ public class ConexaoBanco {
 				venda.setId(rs.getInt("id"));
 				venda.setMetodoPagamento(MetodoPagamento.getMetodoPagamentoById(rs.getInt("id_metodo_pagamento")));
 				venda.setDataVenda(rs.getDate("data_venda"));
-				venda.setValorTotal(rs.getBigDecimal("valor_total"));
 				vendas.add(venda);
 			}
 			for (Venda venda : vendas) {
@@ -176,7 +309,7 @@ public class ConexaoBanco {
 				rs = null;
 				psSelect = conexao.prepareStatement("SELECT * "
 						+ "FROM venda_remedios "
-						+ "WHERE id = ?");
+						+ "WHERE id_venda = ?");
 				psSelect.setInt(1, venda.getId());
 				rs = psSelect.executeQuery();
 				List<Remedio> remedios = new ArrayList<>();
@@ -191,7 +324,7 @@ public class ConexaoBanco {
 				venda.setRemedios(remedios.toArray(new Remedio[0]));
 			}
 		}catch (Exception e) {
-			throw new RuntimeException("Ocorreu um erro na listagem das vendas");
+			throw new RuntimeException("Ocorreu um erro na listagem das vendas: " + e.getMessage());
 		}finally {
 			this.liberar(psSelect);
 		}

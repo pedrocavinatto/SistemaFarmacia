@@ -11,25 +11,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-import Model.Marca;
 import Model.MetodoPagamento;
 import Model.Remedio;
-import Model.Venda;
 
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 
-import Controller.ControleMarca;
 import Controller.ControleRemedio;
 import Controller.ControleVenda;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.awt.event.ActionEvent;
 import javax.swing.JFormattedTextField;
 
@@ -75,8 +73,7 @@ public class CadastraVenda extends JFrame {
 		JButton btnCadastrar = new JButton("Cadastrar");
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				controle_venda.incluiVenda(cbMetodoPagamento, tfDataVenda, tbRemedios);
+				controle_venda.incluiVenda(cbMetodoPagamento, tfDataVenda, tbRemedios, rowId_remedioId);
 				ListaVenda lista_venda = new ListaVenda();
 				lista_venda.setVisible(true);
 				setVisible(false);
@@ -129,9 +126,18 @@ public class CadastraVenda extends JFrame {
 		scrollPane.setViewportView(tbRemedios);
 		atualizaLista(tbRemedios, rowId_remedioId);
 		
-		tfDataVenda = new JFormattedTextField();
-		tfDataVenda.setBounds(217, 85, 299, 19);
-		contentPane.add(tfDataVenda);
+		try {
+			MaskFormatter formatter = new MaskFormatter("##/##/####");
+			tfDataVenda = new JFormattedTextField(formatter);
+			tfDataVenda.setBounds(217, 85, 299, 19);
+			contentPane.add(tfDataVenda);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	private void carregaTela(String título, String tituloBotao) {
+		
 	}
 	
 	private void atualizaLista(JTable tbRemedios, Map<Integer, Integer> rowId_remedioId) {

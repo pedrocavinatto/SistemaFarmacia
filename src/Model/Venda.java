@@ -8,7 +8,7 @@ public class Venda {
 	private Remedio[] remedios;
 	private MetodoPagamento metodo_pagamento;
 	private Date data_venda;
-	private BigDecimal valor_total;
+	//private BigDecimal valor_total;
 	
 	public int getId() {
         return id;
@@ -43,10 +43,16 @@ public class Venda {
     }
 
     public BigDecimal getValorTotal() {
+    	BigDecimal valor_total = BigDecimal.ZERO;
+    	for (Remedio remedio : this.remedios) {
+    		if (remedio == null) {continue;}; //ignorando objetos nulos
+    		BigDecimal valor_total_remedio = remedio.getValorVenda().multiply(BigDecimal.valueOf(remedio.getQuantidade()));
+    		valor_total = valor_total.add(valor_total_remedio);
+    	}
         return valor_total;
     }
 
-    public void setValorTotal(BigDecimal valor_total) {
-        this.valor_total = valor_total;
-    }
+    //public void setValorTotal(BigDecimal valor_total) {
+    //    this.valor_total = valor_total;
+    //}
 }

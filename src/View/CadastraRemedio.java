@@ -10,6 +10,7 @@ import javax.swing.text.MaskFormatter;
 import Controller.ControleMarca;
 import Controller.ControleRemedio;
 import Model.Marca;
+import Model.Remedio;
 
 import javax.swing.JButton;
 import java.awt.Font;
@@ -21,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import java.awt.*;
 
 public class CadastraRemedio extends JFrame {
 
@@ -34,6 +34,7 @@ public class CadastraRemedio extends JFrame {
 	private JComboBox cbMarca;
 	private JFormattedTextField tfDataVencimento;
 	private JFormattedTextField tfDataProducao;
+	private JButton btnCadastrar;
 
 	/**
 	 * Launch the application.
@@ -55,19 +56,10 @@ public class CadastraRemedio extends JFrame {
 	 * Create the frame.
 	 */
 	public CadastraRemedio() {
-		ControleRemedio controle_remedio = new ControleRemedio();
-		ControleMarca controle_marca = new ControleMarca();
-		
-		setTitle("Cadastro de remédios");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 655, 521);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		carregaTela("Cadastro de remédios", "Cadastrar");
 
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JButton btnCadastrar = new JButton("Cadastrar");
+		ControleRemedio controle_remedio = new ControleRemedio();
+
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controle_remedio.incluiRemedio(tfCodigoBarras, tfNome, Marca.class.cast(cbMarca.getSelectedItem()), tfDataProducao, tfDataVencimento, tfValorCusto, tfValorVenda, tfQuantidade);
@@ -76,9 +68,60 @@ public class CadastraRemedio extends JFrame {
 				setVisible(false);
 			}
 		});
+		contentPane.add(btnCadastrar);
+	}
+	
+	public CadastraRemedio(int id) {
+		carregaTela("Edição de remédios", "Editar");
+
+		ControleRemedio controle_remedio = new ControleRemedio();
+		ControleMarca controle_marca = new ControleMarca();
+
+		btnCadastrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controle_remedio.editaRemedio(id, tfCodigoBarras, tfNome, Marca.class.cast(cbMarca.getSelectedItem()), tfDataProducao, tfDataVencimento, tfValorCusto, tfValorVenda, tfQuantidade);
+				ListaRemedio lista_remedio = new ListaRemedio();
+				lista_remedio.setVisible(true);
+				setVisible(false);
+			}
+		});
+		contentPane.add(btnCadastrar);
+
+		//Escrevendo valores antigos da marca para edição
+		Remedio remedio = controle_remedio.pegaRemedioPorId(id);
+		tfCodigoBarras.setText(remedio.getCodigoBarra());
+		tfNome.setText(remedio.getNome());
+		List<Marca> marcasArray = controle_marca.listaMarcas();
+		for (int i = 0; i < marcasArray.size(); i++) {
+			if (marcasArray.get(i).getId() == remedio.getMarca().getId()) {
+				cbMarca.setSelectedIndex(i);
+			}
+		}
+		//formatando data
+		tfDataProducao.setText(formataData(remedio.getDataProducao().toString()));
+		tfDataVencimento.setText(formataData(remedio.getDataValidade().toString()));
+
+
+		tfValorCusto.setText(remedio.getValorCusto().toString());
+		tfValorVenda.setText(remedio.getValorVenda().toString());
+		tfQuantidade.setText(Integer.toString(remedio.getQuantidade()));
+	}
+
+	private void carregaTela(String titulo, String tituloBotao) {
+		ControleMarca controle_marca = new ControleMarca();
+		
+		setTitle(titulo);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 655, 521);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		btnCadastrar = new JButton(tituloBotao);
 		btnCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnCadastrar.setBounds(230, 390, 196, 42);
-		contentPane.add(btnCadastrar);
 		
 		tfQuantidade = new JTextField();
 		tfQuantidade.setColumns(10);
@@ -116,7 +159,6 @@ public class CadastraRemedio extends JFrame {
 			tfDataVencimento.setBounds(243, 199, 299, 23);
 			contentPane.add(tfDataVencimento);
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -132,7 +174,6 @@ public class CadastraRemedio extends JFrame {
 			tfDataProducao.setBounds(243, 161, 299, 23);
 			contentPane.add(tfDataProducao);
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -173,5 +214,8 @@ public class CadastraRemedio extends JFrame {
 		lblNewLabel.setBounds(93, 42, 122, 28);
 		contentPane.add(lblNewLabel);
 	}
-
+	private String formataData(String data){
+		String[] dataSplit = data.split("-");
+		return dataSplit[2] + "/" + dataSplit[1] + "/" + dataSplit[0];
+	}
 }
