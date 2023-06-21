@@ -10,7 +10,7 @@ public class ConexaoBanco {
 	public ConexaoBanco() throws Exception {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			this.conexao = DriverManager.getConnection("jdbc:mysql://localhost/farmacia", "root", "");
+			this.conexao = DriverManager.getConnection("jdbc:mysql://localhost/farmacia", "root", "13018123905");
 		} catch (Exception e) {
 			throw new Exception("Ocorreu um erro na conexão");
 		}
@@ -250,8 +250,17 @@ public class ConexaoBanco {
 					psInsert.setBigDecimal(3, remedio.getValorVenda()); // valor unitario do remedio
 					psInsert.setInt(4, remedio.getQuantidade());
 					psInsert.executeUpdate();
+					psInsert = null;
+					psInsert = conexao.prepareStatement("UPDATE remedios "
+							+ "SET quantidade = quantidade - ? "
+							+ "WHERE id = ? ");
+
+					psInsert.setInt(1, remedio.getQuantidade());
+					psInsert.setInt(2, remedio.getId());
+					psInsert.executeUpdate();
 				}
 			}
+
 		} catch (Exception e) {
 			throw new RuntimeException("Ocorreu um erro na inserção da venda: " + e.getMessage());
 		} finally {
