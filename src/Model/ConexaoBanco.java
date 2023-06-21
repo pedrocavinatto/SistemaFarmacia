@@ -10,7 +10,7 @@ public class ConexaoBanco {
 	public ConexaoBanco() throws Exception {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			this.conexao = DriverManager.getConnection("jdbc:mysql://localhost/farmacia", "root", "");
+			this.conexao = DriverManager.getConnection("jdbc:mysql://localhost/farmacia", "root", "13018123905");
 		} catch (Exception e) {
 			throw new Exception("Ocorreu um erro na conexão");
 		}
