@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -92,10 +92,15 @@ public class ListaMarca extends JFrame {
 		btnExcluiMarca.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ControleMarca controle_marca = new ControleMarca();
-				controle_marca.excluiMarca(retornaIdMarcaSelecionada(tbMarcas, rowId_marcaId));
-				DefaultTableModel model = (DefaultTableModel) tbMarcas.getModel();
-				model.setRowCount(0);
-				atualizaLista(tbMarcas, rowId_marcaId);
+				int id = retornaIdMarcaSelecionada(tbMarcas, rowId_marcaId);
+				if (!controle_marca.verificaUsoDeMarca(id)) {
+					controle_marca.excluiMarca(id);
+					DefaultTableModel model = (DefaultTableModel) tbMarcas.getModel();
+					model.setRowCount(0);
+					atualizaLista(tbMarcas, rowId_marcaId);
+				} else {
+					JOptionPane.showMessageDialog(null, "Não é possível excluir uma marca que está sendo usada por um remédio!", "Alerta", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 

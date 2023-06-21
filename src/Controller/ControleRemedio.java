@@ -67,6 +67,10 @@ public class ControleRemedio {
 		bd.editarRemedio(remedio);
 	}
 
+	public Boolean verificaUsoDeRemedio(int id) {
+		return bd.verificaUsoDeRemedio(id);
+	}
+
 	public void excluiRemedio(int id) {
 		bd.deleteRemedios(id);
 	}

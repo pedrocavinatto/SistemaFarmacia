@@ -10,7 +10,7 @@ public class ConexaoBanco {
 	public ConexaoBanco() throws Exception {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			this.conexao = DriverManager.getConnection("jdbc:mysql://localhost/farmacia", "root", "13018123905");
+			this.conexao = DriverManager.getConnection("jdbc:mysql://localhost/farmacia", "root", "");
 		} catch (Exception e) {
 			throw new Exception("Ocorreu um erro na conexão");
 		}
@@ -154,6 +154,25 @@ public class ConexaoBanco {
 		}
 	}
 
+	public Boolean verificaUsoDeRemedio(int id) {
+		PreparedStatement psSelect = null;
+		try {
+			psSelect = conexao.prepareStatement("SELECT * "
+					+ "FROM venda_remedios "
+					+ "WHERE id_remedio = ? ");
+			psSelect.setInt(1, id);
+			ResultSet rs = psSelect.executeQuery();
+			while (rs.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro para verificar a existência do remédio: " + e.getMessage());
+		} finally {
+			this.liberar(psSelect);
+		}
+		return false;
+	}
+
 	public void inserirMarca(Marca marca) {
 		PreparedStatement psInsert = null;
 		try {
@@ -246,6 +265,25 @@ public class ConexaoBanco {
 			this.liberar(psSelect);
 		}
 		return marca;
+	}
+
+	public Boolean verificaUsoDeMarca(int id) {
+		PreparedStatement psSelect = null;
+		try {
+			psSelect = conexao.prepareStatement("SELECT * "
+					+ "FROM remedios "
+					+ "WHERE id_marca = ? ");
+			psSelect.setInt(1, id);
+			ResultSet rs = psSelect.executeQuery();
+			while (rs.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro para verificar a existência da marca: " + e.getMessage());
+		} finally {
+			this.liberar(psSelect);
+		}
+		return false;
 	}
 
 	public void inserirVenda(Venda venda) {

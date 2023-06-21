@@ -36,6 +36,10 @@ public class ControleMarca {
 		bd.editarMarca(marca);
 	}
 
+	public Boolean verificaUsoDeMarca(int id) {
+		return bd.verificaUsoDeMarca(id);
+	}
+
 	public void excluiMarca(int id) {
 		bd.deleteMarcas(id);
 	}

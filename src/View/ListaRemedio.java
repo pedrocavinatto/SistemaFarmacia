@@ -3,6 +3,7 @@ package View;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
@@ -54,7 +55,7 @@ public class ListaRemedio extends JFrame {
 		setTitle("Remédios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setBounds(100, 100, 800, 508);
+		setBounds(100, 100, 803, 508);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -91,10 +92,16 @@ public class ListaRemedio extends JFrame {
 		btnExcluiRemedio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ControleRemedio controle_remedio = new ControleRemedio();
-				controle_remedio.excluiRemedio(retornaIdRemedioSelecionado(tbRemedios, rowId_remedioId));
-				DefaultTableModel model = (DefaultTableModel) tbRemedios.getModel();
-				model.setRowCount(0);
-				atualizaLista(tbRemedios, rowId_remedioId);
+
+				int id = retornaIdRemedioSelecionado(tbRemedios, rowId_remedioId);
+				if (!controle_remedio.verificaUsoDeRemedio(id)) {
+					controle_remedio.excluiRemedio(id);
+					DefaultTableModel model = (DefaultTableModel) tbRemedios.getModel();
+					model.setRowCount(0);
+					atualizaLista(tbRemedios, rowId_remedioId);
+				} else {
+					JOptionPane.showMessageDialog(null, "Não é possível excluir um remédio que está atrelado a uma venda!", "Alerta", JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 		btnExcluiRemedio.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -139,7 +146,7 @@ public class ListaRemedio extends JFrame {
 			}
 		});
 		btnEditaRemedio.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnEditaRemedio.setBounds(326, 419, 187, 42);
+		btnEditaRemedio.setBounds(325, 419, 187, 42);
 		contentPane.add(btnEditaRemedio);
 	}
 
