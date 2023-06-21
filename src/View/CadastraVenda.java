@@ -136,10 +136,6 @@ public class CadastraVenda extends JFrame {
 		}
 	}
 	
-	private void carregaTela(String título, String tituloBotao) {
-		
-	}
-	
 	private void atualizaLista(JTable tbRemedios, Map<Integer, Integer> rowId_remedioId) {
 		ControleRemedio controle_remedio = new ControleRemedio();
 		List<Remedio> remedios = controle_remedio.listaRemedios();
