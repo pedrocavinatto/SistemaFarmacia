@@ -86,6 +86,25 @@ public class ListaVenda extends JFrame {
 		scrollPane.setBounds(10, 10, 613, 387);
 		contentPane.add(scrollPane);
 
+		JButton btnDeletaVenda = new JButton("Deletar venda");
+		btnDeletaVenda.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnDeletaVenda.setBounds(207, 407, 187, 52);
+		contentPane.add(btnDeletaVenda);
+		btnDeletaVenda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = tbVendas.getSelectedRow();
+				if (row == -1) {
+					return;
+				}
+				;
+				int vendaId = rowId_vendaId.get(row);
+				ControleVenda controle_venda = new ControleVenda();
+				controle_venda.deletaVenda(vendaId);
+				DefaultTableModel model = (DefaultTableModel) tbVendas.getModel();
+				model.removeRow(row);
+			}
+		});
+
 		tbVendas = new JTable();
 		tbVendas.setModel(new DefaultTableModel(
 				new Object[][] {

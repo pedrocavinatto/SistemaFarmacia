@@ -18,46 +18,57 @@ import Model.Remedio;
 import Model.Venda;
 
 public class ControleVenda {
-	
+
 	ConexaoBanco bd;
-	
+
 	public ControleVenda() {
 		try {
 			bd = new ConexaoBanco();
-		} catch (Exception e){
+		} catch (Exception e) {
 			System.out.println("Erro de conexão com o banco de Dados!!");
 		}
 	}
-	public void incluiVenda(JComboBox cbMetodoPagamento, JTextField tfDataVenda, JTable tbRemedios, Map<Integer, Integer> rowId_remedioId) {
+
+	public void incluiVenda(JComboBox cbMetodoPagamento, JTextField tfDataVenda, JTable tbRemedios,
+			Map<Integer, Integer> rowId_remedioId) {
 		Venda venda = new Venda();
 		venda.setMetodoPagamento(MetodoPagamento.class.cast(cbMetodoPagamento.getSelectedItem()));
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		try {
 			venda.setDataVenda(dateFormat.parse(tfDataVenda.getText()));
-		} catch(ParseException e) {
-            System.out.println("Erro ao converter data: " + e.getMessage());
-        }
+		} catch (ParseException e) {
+			System.out.println("Erro ao converter data: " + e.getMessage());
+		}
 		DefaultTableModel model = (DefaultTableModel) tbRemedios.getModel();
 
 		int rowCount = model.getRowCount();
 
 		Remedio[] remedios_vendidos = new Remedio[rowCount];
-		
+
 		for (int row = 0; row < rowCount; row++) {
-			Object quantidadeObj = model.getValueAt(row, 0); //Coluna quantidade
-			Object valorVendaObj = model.getValueAt(row, 4); //Coluna Valor de Venda
+			Object quantidadeObj = model.getValueAt(row, 0); // Coluna quantidade
+			Object valorVendaObj = model.getValueAt(row, 4); // Coluna Valor de Venda
 			int quantidade = Integer.parseInt(quantidadeObj.toString());
-			if (quantidade <= 0) {continue;};
+			BigDecimal valorVenda = new BigDecimal(valorVendaObj.toString());
+			if (quantidade <= 0) {
+				continue;
+			}
+			;
 			Remedio remedio = new Remedio();
 			remedio.setId(rowId_remedioId.get(row));
 			remedio.setQuantidade(quantidade);
-			remedio.setValorVenda(new BigDecimal(valorVendaObj.toString()));
+			remedio.setValorVenda(valorVenda);
 			remedios_vendidos[row] = remedio;
 		}
 		venda.setRemedios(remedios_vendidos);
 		bd.inserirVenda(venda);
 	}
-	public List<Venda> listaVendas(){
+
+	public void deletaVenda(int id) {
+		bd.deleteVendaRemedios(id);
+	}
+
+	public List<Venda> listaVendas() {
 		return bd.listarVendas();
 	}
 }
