@@ -87,6 +87,20 @@ public class ListaRemedio extends JFrame {
 		scrollPane.setBounds(10, 10, 772, 400);
 		contentPane.add(scrollPane);
 
+		JButton btnExcluiRemedio = new JButton("Excluir Remédio");
+		btnExcluiRemedio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ControleRemedio controle_remedio = new ControleRemedio();
+				controle_remedio.excluiRemedio(retornaIdRemedioSelecionado(tbRemedios, rowId_remedioId));
+				DefaultTableModel model = (DefaultTableModel) tbRemedios.getModel();
+				model.setRowCount(0);
+				atualizaLista(tbRemedios, rowId_remedioId);
+			}
+		});
+		btnExcluiRemedio.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnExcluiRemedio.setBounds(616, 419, 166, 42);
+		contentPane.add(btnExcluiRemedio);
+
 		tbRemedios = new JTable();
 		tbRemedios.setModel(new DefaultTableModel(
 				new Object[][] {

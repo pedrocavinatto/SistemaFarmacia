@@ -10,7 +10,7 @@ public class ConexaoBanco {
 	public ConexaoBanco() throws Exception {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			this.conexao = DriverManager.getConnection("jdbc:mysql://localhost/farmacia", "root", "13018123905");
+			this.conexao = DriverManager.getConnection("jdbc:mysql://localhost/farmacia", "root", "");
 		} catch (Exception e) {
 			throw new Exception("Ocorreu um erro na conexão");
 		}
@@ -138,6 +138,20 @@ public class ConexaoBanco {
 			this.liberar(psSelect);
 		}
 		return remedio;
+	}
+
+	public void deleteRemedios(int id) {
+		PreparedStatement psInsert = null;
+		try {
+			psInsert = conexao.prepareStatement("DELETE FROM remedios "
+					+ "WHERE id = ? ");
+			psInsert.setInt(1, id);
+			psInsert.executeUpdate();
+		} catch (Exception e) {
+			throw new RuntimeException("Ocorreu um erro em deletar remédios de uma venda: " + e.getMessage());
+		} finally {
+			this.liberar(psInsert);
+		}
 	}
 
 	public void inserirMarca(Marca marca) {
